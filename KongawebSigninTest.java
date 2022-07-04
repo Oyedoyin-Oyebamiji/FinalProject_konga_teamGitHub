@@ -1,10 +1,13 @@
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
 import java.util.PriorityQueue;
 
 public class KongawebSigninTest {
@@ -37,6 +40,8 @@ public class KongawebSigninTest {
         driver.manage().window().maximize();
         //5. Getting the page title
         System.out.println(driver.getTitle());
+        String Pagetitle = driver.getTitle();
+        System.out.println("The page title is : '" + Pagetitle + "'");
         Thread.sleep(5000);
     }
 
@@ -55,28 +60,31 @@ public class KongawebSigninTest {
             //Fail
             System.out.println("Invalid webpage");
         Thread.sleep(5000);
+        
     }
 
     @Test(priority = 2)
     public void login_emailaddress() throws InterruptedException {
         //7. Locating and inputting valid email address in the email address or phone number field
-        driver.findElement(By.id("username")).sendKeys("");
-        //Test case 3: Verify that user can log in with valid email address
+        driver.findElement(By.id("username")).sendKeys("oyedoyin@mailinator.com");
+        //Test case 3:Verify that User can log in with valid email address
+        System.out.println("valid email address");
         Thread.sleep(5000);
     }
 
     @Test(priority = 3)
     public void login_password() throws InterruptedException {
         //8. Locating and inputting valid password in the password field
-        driver.findElement(By.id("password")).sendKeys("");
-        //Test case 4:Verify that User can log in with valid password
-        Thread.sleep(5000);
+        driver.findElement(By.id("password")).sendKeys("Oye123@me");
+        Thread.sleep(10000);
+        //Test case 4: Verify that user can log in with valid password
+        System.out.println("valid password");
     }
 
     @Test(priority = 4)
     public void click_login_button() throws InterruptedException {
         //9. Clicking on Login button to log into account
-        driver.findElement(By.xpath("//*[@id=\"app-content-wrapper\"]/div[4]/section/section/aside/div[2]/div/form/div[3]/button")).click();
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[3]/button")).click();
         //10. Making sure the URL page fully loads by delaying by 5000 millisecond
         Thread.sleep(5000);
         //11. Logging out of the account
@@ -95,10 +103,27 @@ public class KongawebSigninTest {
         Thread.sleep(5000);
     }
 
+    @Test(priority = 5)
+    public void invalidlogincredentials() throws InterruptedException {
+        //12. Logging in with invalid login credentials
+        //Clicking on Login/Signup button to open login page
+        driver.findElement(By.xpath("//*[@id=\"nav-bar-fix\"]/div[1]/div/div/div[4]/a")).click();
+        Thread.sleep(5000);
+        //Test case 6: Verify that user can clear previous log in credentials
+        driver.findElement(By.id("username")).clear();
+        driver.findElement(By.id("password")).clear();
+        Thread.sleep(2000);
+        //Test case 6: Verify that user cannot sign up with invalid log in credentials successfully
+        driver.findElement(By.id("username")).sendKeys("oye@mailinator");
+        driver.findElement(By.id("password")).sendKeys("O");
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[3]/button")).click();
+        Thread.sleep(2000);
+    }
+
     @AfterTest
     public void closeBrowser() {
         //12. Quitting browser
         driver.quit();
     }
-
 }
